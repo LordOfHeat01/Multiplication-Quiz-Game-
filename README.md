@@ -19,4 +19,5 @@ This is a simple, interactive console game designed for kids to improve their mu
 ## Developed By:
 Tapendra Verma 
 B.Tech 3rd Year Student
-Jaypee University Of Engineering & Technology 
+Jaypee University Of Engineering & Technology, Guna Madhya Pradesh 
+Feel free to connect and explore more projects!

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multiplication Game</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #74ebd5, #9face6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .game-container {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+    input, select, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      font-size: 16px;
+      border: 2px solid #9face6;
+      border-radius: 10px;
+      outline: none;
+      transition: 0.3s;
+    }
+    input:focus, select:focus {
+      border-color: #74ebd5;
+    }
+    button {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background: linear-gradient(135deg, #764ba2, #667eea);
+    }
+    .feedback {
+      font-weight: bold;
+      font-size: 18px;
+      color: #333;
+      margin-top: 10px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h2>🔢 Multiplication Game 🔢</h2>
+    <input id="name" placeholder="Enter your name" />
+    <select id="level">
+      <option value="1">🟢 Easy</option>
+      <option value="2">🟡 Medium</option>
+      <option value="3">🔴 Hard</option>
+    </select>
+    <button onclick="startGame()">Start Game</button>
+    <div id="question" style="margin-top: 20px;"></div>
+    <input id="answer" type="number" placeholder="Enter your answer" style="display:none;" onkeydown="handleKey(event)"/>
+    <button id="submit" onclick="checkAnswer()" style="display:none;">Submit</button>
+    <div class="feedback" id="feedback"></div>
+    <div id="scoreDisplay" class="feedback"></div>
+    <button id="restart" onclick="location.reload()" style="display:none;">🔁 Play Again</button>
+  </div>
+
+  <script>
+    let name = '';
+    let t, k, level, score = 0, questionCount = 0;
+    const feedbacksRight = ["🎉 Very Good!", "✅ Excellent!", "👏 Nice Work!", "💪 Keep it up!"];
+    const feedbacksWrong = ["❌ No. Try again", "🙁 Wrong. Try once more", "😐 Don't give up", "🔁 No. Keep trying"];
+
+    function randomNum(level) {
+      if (level == 1) return Math.floor(Math.random() * 9) + 1;
+      if (level == 2) return Math.floor(Math.random() * 90) + 10;
+      return Math.floor(Math.random() * 900) + 100;
+    }
+
+    function startGame() {
+      name = document.getElementById("name").value.trim();
+      level = parseInt(document.getElementById("level").value);
+      if (!name) {
+        alert("Please enter your name");
+        return;
+      }
+      document.getElementById("name").style.display = "none";
+      document.getElementById("level").style.display = "none";
+      event.target.style.display = "none";
+      document.getElementById("answer").style.display = "block";
+      document.getElementById("submit").style.display = "block";
+      nextQuestion();
+    }
+
+    function nextQuestion() {
+      if (questionCount >= 10) {
+        finishGame();
+        return;
+      }
+      t = randomNum(level);
+      k = randomNum(level);
+      document.getElementById("question").innerText = `Q${questionCount+1}: How much is ${t} × ${k}?`;
+      document.getElementById("answer").value = "";
+      document.getElementById("feedback").innerText = "";
+    }
+
+    function checkAnswer() {
+      const ans = parseInt(document.getElementById("answer").value);
+      if (ans === t * k) {
+        score++;
+        document.getElementById("feedback").innerText = feedbacksRight[Math.floor(Math.random()*4)];
+      } else {
+        document.getElementById("feedback").innerText = feedbacksWrong[Math.floor(Math.random()*4)];
+      }
+      questionCount++;
+      setTimeout(nextQuestion, 1000);
+    }
+
+    function finishGame() {
+      document.getElementById("question").innerText = `${name}, your total score is ${score * 10} out of 100.`;
+      document.getElementById("answer").style.display = "none";
+      document.getElementById("submit").style.display = "none";
+      document.getElementById("feedback").innerText =
+        (score * 10 > 75) ? `🎉 Well done, ${name}! You're ready for the next level.` : `📚 ${name}, please ask your teacher for extra help.`;
+      document.getElementById("restart").style.display = "block";
+    }
+
+    function handleKey(event) {
+      if (event.key === "Enter") {
+        checkAnswer();
+      }
+    }
+  </script>
+</body>
+</html>
